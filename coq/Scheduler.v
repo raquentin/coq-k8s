@@ -56,3 +56,44 @@ Fixpoint schedule_all (fuel : nat) (c : Cluster) : Cluster :=
       | Some c' => schedule_all f' c'
       end
   end.
+  
+(* Find the first eligible node; return (prefix, chosen, suffix). *)
+Fixpoint find_eligible_split (p : Pod) (ns : list Node)
+  : option (list Node * Node * list Node) :=
+  match ns with
+  | [] => None
+  | n :: tl =>
+      if pod_node_eligible p n
+      then Some ([], n, tl)
+      else match find_eligible_split p tl with
+           | None => None
+           | Some (l, c, r) => Some (n :: l, c, r)
+           end
+  end.
+
+(* One step using the split (avoids “update-by-name” aliasing in proofs). *)
+Definition schedule_one' (c : Cluster) : option Cluster :=
+  match select_next_pod c.(pending) with
+  | None => None
+  | Some (p, rest) =>
+      match find_eligible_split p c.(nodes) with
+      | None => None
+      | Some (l, n, r) =>
+          let n' := node_consume_pod p n in
+          Some {| nodes := l ++ n' :: r;
+                  pending := rest;
+                  bindings := {| binding_pod := p.(pod_name);
+                                 binding_node := n.(node_name) |}
+                              :: c.(bindings) |}
+      end
+  end.
+
+Fixpoint schedule_all' (fuel : nat) (c : Cluster) : Cluster :=
+  match fuel with
+  | 0 => c
+  | S f' =>
+      match schedule_one' c with
+      | None => c
+      | Some c' => schedule_all' f' c'
+      end
+  end.
