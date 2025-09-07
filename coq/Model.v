@@ -130,13 +130,19 @@ Definition select_next_pod (ps : list Pod) : option (Pod * list Pod) :=
         Some (chosen, rest)
     end.
 
-Fixpoint first_eligible_node (c : Cluster) : option ClusterState :=
+Fixpoint first_eligible_node (p: Pod) (ns : list Node) : option Node :=
+    match ns with
+    | [] => None
+    | n :: tl => if pod_node_eligible p n then Some n else first_eligible_node p tl
+    end.
+
+Definition schedule_one (c : Cluster) : option Cluster :=
     match select_next_pod c.(pending) with
     | None => None
     | Some (p, rest) =>
         match first_eligible_node p c.(nodes) with
         | None => None
-        | Some => n
+        | Some n =>
             let n' := node_consume_pod p n in
             let ns' := update_node_by_name c.(nodes) n.(node_name) (fun _ => ') in
             Some {| nodes := ns';
@@ -144,7 +150,7 @@ Fixpoint first_eligible_node (c : Cluster) : option ClusterState :=
                     bindings := {| pod := p.(pod_name)
                                    node := n.(node_name) |}
                                 :: c.(bindings) |}
-        end.
+        end
     end.
 
 Fixpoint schedule_all (fuel : nat) (c : Cluster) : Cluster :=
