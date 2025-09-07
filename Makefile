@@ -16,7 +16,7 @@ clean:
 	-@rm -f $(COQMF) $(COQCONF)
 
 distclean: clean
-	-@rm -f coq/*.vo coq/*.vos coq/*.vok coq/*.glob coq/*.aux coq/*.d
+	-@rm -f coq/*.vo coq/*.vos coq/*.vok coq/*.glob coq/*.aux coq/.*.aux coq/*.d
 	-@rm -f coq/.coqdeps.d
 	-@rm -rf coq/.coq-native
 
