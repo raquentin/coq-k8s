@@ -1,5 +1,6 @@
 Makefile.coq
 Makefile.coq.conf
+.Makefile.coq.d
 coq/*.vo
 coq/*.vos
 coq/*.vok
