@@ -1,0 +1,17 @@
+name: coq ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: coq-community/docker-coq-action@v1
+        with:
+          custom_image: "coqorg/coq:8.17"
+          script: |
+            make check
