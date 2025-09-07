@@ -13,5 +13,7 @@ jobs:
       - uses: coq-community/docker-coq-action@v1
         with:
           custom_image: "coqorg/coq:8.17"
+          before_script: |
+            sudo chown -R coq:coq .
           script: |
             make check
