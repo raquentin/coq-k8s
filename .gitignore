@@ -1,19 +1,21 @@
-*.vo
-*.vos
-*.vok
-*.glob
-*.aux
-*.d
-.coq-native/
-.coqdeps.d
-
-Makefile
+build/
 Makefile.coq
-Makefile.conf
+Makefile
+
+coq/*.vo
+coq/*.vos
+coq/*.vok
+coq/*.glob
+coq/*.aux
+coq/*.d
+coq/.coq-native/
+coq/.coqdeps.d
+
 *.timing
 *.timelog
 *.beautified
 
+_opam/
 _build/
 .dune
 *.install
@@ -24,12 +26,8 @@ _build/
 *.cma
 *.o
 *.a
-*.native
-*.byte
 *.mli.depends
 *.ml.depends
-
-_opam/
 
 *.swp
 *.swo

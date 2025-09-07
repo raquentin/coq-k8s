@@ -1,0 +1,28 @@
+COQPROJECT := _CoqProject
+COQMF      := build/Makefile.coq
+
+.PHONY: all build clean realclean no-admit coqchk check
+
+$(COQMF): $(COQPROJECT)
+	@mkdir -p build
+	@echo "[coq_makefile] generating $(COQMF)"
+	@coq_makefile -f $(COQPROJECT) -o $(COQMF)
+
+build: $(COQMF)
+	@$(MAKE) -f $(COQMF) -j
+
+clean:
+	-@$(MAKE) -f $(COQMF) clean 2>/dev/null || true
+
+realclean: clean
+	-@rm -f $(COQMF)
+
+no-admit:
+	@! grep -R --line-number --fixed-strings "Admitted." coq || \
+	  (echo "Found Admitted. above; please finish or remove." && exit 1)
+
+coqchk: build
+	@coqchk -Q coq Kube Kube.Model Kube.Scheduler Kube.Properties
+
+check: build no-admit coqchk
+all: check
