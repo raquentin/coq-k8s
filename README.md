@@ -3,6 +3,6 @@
 
 ## Build
 ```bash
-coq_makefile -f _CoqProject -o Makefile
+coq_makefile -f _CoqProject -o CoqMakefile
 make -j
 ```

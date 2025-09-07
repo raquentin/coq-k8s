@@ -1,7 +1,7 @@
+# Generated Coq makefile & artifacts
 build/
-Makefile.coq
-Makefile
 
+# Coq artifacts
 coq/*.vo
 coq/*.vos
 coq/*.vok
@@ -11,10 +11,12 @@ coq/*.d
 coq/.coq-native/
 coq/.coqdeps.d
 
+# Logs
 *.timing
 *.timelog
 *.beautified
 
+# OPAM/Dune (if used later)
 _opam/
 _build/
 .dune
@@ -29,6 +31,7 @@ _build/
 *.mli.depends
 *.ml.depends
 
+# Editors / OS
 *.swp
 *.swo
 *~
