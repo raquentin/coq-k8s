@@ -1,10 +1,10 @@
 COQPROJECT := _CoqProject
-COQMF      := build/Makefile.coq
+COQMF      := Makefile.coq
+COQCONF    := $(COQMF).conf
 
-.PHONY: all build clean realclean no-admit coqchk check
+.PHONY: all build clean distclean no-admit coqchk check
 
 $(COQMF): $(COQPROJECT)
-	@mkdir -p build
 	@echo "[coq_makefile] generating $(COQMF)"
 	@coq_makefile -f $(COQPROJECT) -o $(COQMF)
 
@@ -12,10 +12,13 @@ build: $(COQMF)
 	@$(MAKE) -f $(COQMF) -j
 
 clean:
-	-@$(MAKE) -f $(COQMF) clean 2>/dev/null || true
+	-@test -f $(COQMF) && $(MAKE) -f $(COQMF) clean 2>/dev/null || true
+	-@rm -f $(COQMF) $(COQCONF)
 
-realclean: clean
-	-@rm -f $(COQMF)
+distclean: clean
+	-@rm -f coq/*.vo coq/*.vos coq/*.vok coq/*.glob coq/*.aux coq/*.d
+	-@rm -f coq/.coqdeps.d
+	-@rm -rf coq/.coq-native
 
 no-admit:
 	@! grep -R --line-number --fixed-strings "Admitted." coq || \
